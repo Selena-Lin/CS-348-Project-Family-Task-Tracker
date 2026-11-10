@@ -1,0 +1,13 @@
+{
+  "name": "family-tracker",
+  "version": "1.0.0",
+  "description": "Family task tracker: chores, shopping, appointments (SQLite)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "better-sqlite3": "^12.0.0",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2"
+  }
+}

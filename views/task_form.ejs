@@ -1,0 +1,52 @@
+<%- include('_header') %>
+<h2><%= heading %></h2>
+<form class="card" method="post" action="<%= action %>">
+  <label>Title</label>
+  <input name="title" required maxlength="120" value="<%= task ? task.title : '' %>">
+
+  <label>Description</label>
+  <textarea name="description" rows="3"><%= task && task.description ? task.description : '' %></textarea>
+
+  <label>Category</label>
+  <select name="category_id" required>
+    <% categories.forEach(c => { %>
+      <option value="<%= c.category_id %>" <%= task && task.category_id === c.category_id ? 'selected' : '' %>><%= c.name %></option>
+    <% }) %>
+  </select>
+
+  <label>Due date</label>
+  <input type="date" name="due_date" required value="<%= task ? task.due_date : '' %>">
+  <label>Due time (optional)</label>
+  <input type="time" name="due_time" value="<%= task && task.due_time ? task.due_time : '' %>">
+
+  <label>Priority</label>
+  <select name="priority">
+    <% [[1, 'High'], [2, 'Medium'], [3, 'Low']].forEach(p => { %>
+      <option value="<%= p[0] %>" <%= (task ? task.priority : 2) === p[0] ? 'selected' : '' %>><%= p[1] %></option>
+    <% }) %>
+  </select>
+
+  <label>Status</label>
+  <select name="status">
+    <% ['open', 'in_progress', 'done'].forEach(s => { %>
+      <option value="<%= s %>" <%= task && task.status === s ? 'selected' : '' %>><%= s.replace('_', ' ') %></option>
+    <% }) %>
+  </select>
+
+  <label>Estimated minutes</label>
+  <input type="number" min="1" name="estimated_minutes" value="<%= task && task.estimated_minutes ? task.estimated_minutes : '' %>">
+
+  <label>Location</label>
+  <input name="location" maxlength="100" value="<%= task && task.location ? task.location : '' %>">
+
+  <label>Assign to</label>
+  <div class="checks">
+    <% members.forEach(m => { %>
+      <label><input type="checkbox" name="assignees" value="<%= m.member_id %>"
+        <%= selected.includes(m.member_id) ? 'checked' : '' %>> <%= m.name %></label>
+    <% }) %>
+  </div>
+
+  <p><button>Save</button> <a href="/tasks">Cancel</a></p>
+</form>
+<%- include('_footer') %>

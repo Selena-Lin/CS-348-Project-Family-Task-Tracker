@@ -1,0 +1,24 @@
+<%- include('_header') %>
+<h2>All tasks</h2>
+<table>
+  <tr><th>Due</th><th>Task</th><th>Category</th><th>Priority</th><th>Status</th><th>Assigned to</th><th></th></tr>
+  <% tasks.forEach(t => { %>
+  <tr>
+    <td><%= t.due_date %> <%= t.due_time || '' %></td>
+    <td><%= t.title %></td>
+    <td><%= t.category %></td>
+    <td><%= ['', 'High', 'Medium', 'Low'][t.priority] %></td>
+    <td><span class="badge <%= t.status %>"><%= t.status.replace('_', ' ') %></span></td>
+    <td><%= t.assignees %></td>
+    <td>
+      <% if (t.status !== 'done') { %>
+        <form class="inline" method="post" action="/tasks/<%= t.task_id %>/complete"><button>Done</button></form>
+      <% } %>
+      <a class="btn" href="/tasks/<%= t.task_id %>/edit">Edit</a>
+      <form class="inline" method="post" action="/tasks/<%= t.task_id %>/delete"
+            onsubmit="return confirm('Delete this task?')"><button class="danger">Delete</button></form>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+<%- include('_footer') %>

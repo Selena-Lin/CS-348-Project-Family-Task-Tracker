@@ -1,0 +1,60 @@
+<%- include('_header') %>
+<h2>Task report</h2>
+<form class="card" method="get" action="/report">
+  <div class="row">
+    <div><label>Due from</label><input type="date" name="from" value="<%= filters.from || '' %>"></div>
+    <div><label>Due to</label><input type="date" name="to" value="<%= filters.to || '' %>"></div>
+    <div><label>Category</label>
+      <select name="category">
+        <option value="">All</option>
+        <% categories.forEach(c => { %>
+          <option value="<%= c.category_id %>" <%= String(filters.category) === String(c.category_id) ? 'selected' : '' %>><%= c.name %></option>
+        <% }) %>
+      </select></div>
+    <div><label>Family member</label>
+      <select name="member">
+        <option value="">Everyone</option>
+        <% members.forEach(m => { %>
+          <option value="<%= m.member_id %>" <%= String(filters.member) === String(m.member_id) ? 'selected' : '' %>><%= m.name %></option>
+        <% }) %>
+      </select></div>
+    <div><label>Status</label>
+      <select name="status">
+        <option value="">Any</option>
+        <% ['open', 'in_progress', 'done'].forEach(s => { %>
+          <option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s.replace('_', ' ') %></option>
+        <% }) %>
+      </select></div>
+  </div>
+  <p><button>Run report</button></p>
+</form>
+
+<% if (submitted) { %>
+  <div class="row" style="margin-bottom:20px">
+    <div class="stat"><b><%= stats.total %></b>tasks</div>
+    <div class="stat"><b><%= stats.done %></b>done</div>
+    <div class="stat"><b><%= stats.completion_rate === null ? '-' : stats.completion_rate + '%' %></b>completion rate</div>
+    <div class="stat"><b><%= stats.avg_minutes === null ? '-' : stats.avg_minutes %></b>avg est. minutes</div>
+    <div class="stat"><b><%= stats.avg_days_vs_due === null ? '-' : stats.avg_days_vs_due %></b>avg days done vs. due</div>
+  </div>
+
+  <h3>By category</h3>
+  <table>
+    <tr><th>Category</th><th>Tasks</th><th>Done</th><th>Total est. minutes</th></tr>
+    <% byCategory.forEach(c => { %>
+      <tr><td><%= c.category %></td><td><%= c.total %></td><td><%= c.done %></td><td><%= c.total_minutes %></td></tr>
+    <% }) %>
+  </table>
+
+  <h3>Matching tasks</h3>
+  <table>
+    <tr><th>Due</th><th>Task</th><th>Category</th><th>Priority</th><th>Status</th><th>Assigned to</th><th>Est. min</th></tr>
+    <% rows.forEach(t => { %>
+      <tr><td><%= t.due_date %></td><td><%= t.title %></td><td><%= t.category %></td>
+          <td><%= ['', 'High', 'Medium', 'Low'][t.priority] %></td>
+          <td><span class="badge <%= t.status %>"><%= t.status.replace('_', ' ') %></span></td>
+          <td><%= t.assignees %></td><td><%= t.estimated_minutes || '' %></td></tr>
+    <% }) %>
+  </table>
+<% } %>
+<%- include('_footer') %>
